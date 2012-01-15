@@ -1,0 +1,6 @@
+dbuser="root"
+dbpassword="superduperdbpassword"
+dbhost="hyperion"
+dbname="tobo"
+xmppuser="tobo.bot.test"
+xmpppassword="supersecretaccountpasswd"

@@ -1,0 +1,41 @@
+<project name="pokebot" default="test" basedir="src">
+	<property name="groovylib" value="/home/dendiz/applications/groovy-1.5.7/lib" />
+	<property name="groovyall" value="/home/dendiz/applications/groovy-1.5.7/embeddable/groovy-all-1.5.7.jar" />
+	<property name="sandbox"   value="sandbox" />
+	<property name="lib"       value="lib" />
+	<property name="test"      value="test" />
+	<path id="classpath">
+		<fileset id="libFiles" dir="${groovylib}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement location="${groovyall}" />
+		<pathelement location="../${sandbox}" />
+		<fileset id="libFiles2" dir="../${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef name="groovyc"   classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath"/>
+	<taskdef name="groovy"    classname="org.codehaus.groovy.ant.Groovy" classpathref="classpath"/>
+
+	<target name="init">
+		<mkdir dir="../${sandbox}" />
+	</target>
+	<target name="compile" depends="init">
+		<groovyc srcdir="." destdir="../${sandbox}" classpathref="classpath" />
+		<groovyc srcdir="../${test}" destdir="../${sandbox}" classpath="classpath" />
+	</target>
+	<target name="test" depends="compile">
+		<junit fork="no" haltonfailure="yes" maxmemory="512">
+			<jvmarg value="-Xmx512m" />
+			<classpath refid="classpath"/>
+			<formatter type="brief" usefile="false" />
+			<batchtest>
+				<fileset dir="../${sandbox}" includes="**/*Test.class" />
+			</batchtest>
+		</junit>
+	</target>
+	<target name="clean" description="clean all created files">
+		<delete dir="../${sandbox}"/>
+	</target>
+</project>
